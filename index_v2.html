@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SOLO | Portal de Precificação</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=IBM+Plex+Mono:wght@400;600&family=Jost:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root { --terra: #584236; --argila: #8C452B; --oliva: #9C997D; --marfim: #F7F4EE; --sombra: rgba(88,66,54,0.1); }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background-color: var(--marfim); 
+            color: var(--terra); 
+            font-family: 'Jost', sans-serif; 
+            min-height: 100vh; 
+            padding-bottom: 40px;
+        }
+
+        /* Logo Responsivo */
+        header { padding: 2rem 1rem; text-align: center; }
+        .logo-solo { display: inline-flex; align-items: center; justify-content: center; }
+        .logo-solo span { font-family: 'Cormorant Garamond', serif; font-size: clamp(60px, 15vw, 100px); color: var(--argila); font-weight: 600; letter-spacing: -3px; }
+        .logo-globe { width: clamp(50px, 12vw, 78px); height: clamp(50px, 12vw, 78px); margin-left: 5px; margin-top: 10px; }
+
+        /* Layout Grid Corrigido */
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 15px; 
+            display: grid; 
+            grid-template-columns: 310px 1fr; 
+            gap: 20px; 
+        }
+
+        /* Sidebar - No telemóvel deixa de ser sticky para não travar o ecrã */
+        aside { 
+            background: white; 
+            padding: 1.5rem; 
+            border-radius: 24px; 
+            box-shadow: 0 10px 30px var(--sombra); 
+            height: fit-content;
+        }
+
+        .card { 
+            background: white; 
+            padding: 1.5rem; 
+            border-radius: 24px; 
+            box-shadow: 0 10px 30px var(--sombra); 
+            margin-bottom: 20px; 
+        }
+        
+        h2, h3 { font-family: 'Cormorant Garamond', serif; color: var(--terra); margin-bottom: 1rem; }
+        label { display: block; font-weight: 600; font-size: 0.75rem; margin-bottom: 0.3rem; color: var(--oliva); text-transform: uppercase; }
+        
+        input { 
+            width: 100%; 
+            padding: 0.8rem; 
+            border: 1.5px solid #eee; 
+            border-radius: 12px; 
+            font-family: 'IBM Plex Mono', monospace; 
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        button { 
+            cursor: pointer; border: none; border-radius: 12px; font-family: 'Jost', sans-serif; 
+            font-weight: 600; transition: 0.3s; width: 100%; padding: 1rem;
+        }
+        .btn-primary { background: var(--argila); color: white; font-size: 1.1rem; }
+        .btn-secondary { background: var(--oliva); color: white; }
+
+        /* Grid de inputs para PC, Coluna para Telemóvel */
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        #section-resultados { display: none; margin-top: 20px; }
+        .res-card { background: var(--marfim); padding: 1rem; border-radius: 15px; margin-bottom: 10px; border-left: 4px solid var(--oliva); }
+        .hero-price { background: var(--argila); color: white; text-align: center; padding: 2rem; border-radius: 20px; margin-bottom: 15px; }
+        .hero-price div { font-family: 'IBM Plex Mono'; font-size: 2.5rem; font-weight: 600; }
+
+        /* --- MEDIA QUERIES PARA TELEMÓVEL --- */
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+            aside { position: static; order: 1; } /* Definições aparecem primeiro */
+            section { order: 2; }
+            .input-grid { grid-template-columns: 1fr; } /* Inputs um por baixo do outro */
+            .logo-solo span { font-size: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-solo">
+            <span>SOL</span>
+            <svg class="logo-globe" viewBox="0 0 100 100">
+                <clipPath id="h"> <circle cx="50" cy="50" r="48" /> </clipPath>
+                <g clip-path="url(#h)">
+                    <rect x="0" y="0" width="100" height="25" fill="#8C452B" />
+                    <path d="M-10 22 Q50 35 110 22 L110 45 Q50 58 -10 45 Z" fill="#9C997D" />
+                    <path d="M-10 42 Q50 55 110 42 L110 65 Q50 78 -10 65 Z" fill="#584236" />
+                    <path d="M-10 62 Q50 75 110 62 L110 85 Q50 98 -10 85 Z" fill="#9C997D" />
+                    <rect x="0" y="82" width="100" height="20" fill="#8C452B" />
+                </g>
+                <circle cx="50" cy="50" r="48" stroke="#8C452B" stroke-width="1" fill="none" />
+            </svg>
+        </div>
+    </header>
+
+    <main class="container">
+        <aside>
+            <h2>Definições</h2>
+            <label>Energia (€/kWh)</label><input type="number" id="custo_kwh" step="0.01" value="0.22">
+            <label>Potência (W)</label><input type="number" id="potencia_w" value="350">
+            <label>Técnico (€/h)</label><input type="number" id="custo_operador_hora" value="15.00">
+            <label>Depreciação (€/h)</label><input type="number" id="depreciacao_hora" value="0.80">
+            <label>Margem (%)</label><input type="number" id="margem_lucro" value="80">
+            <button onclick="salvarConfig()" class="btn-secondary">Guardar Padrão</button>
+        </aside>
+
+        <section>
+            <div class="card">
+                <h3>Calculadora</h3>
+                <label>Nome do Projeto</label>
+                <input type="text" id="nome_projeto" placeholder="Ex: Jarra Solo">
+                
+                <div class="input-grid">
+                    <div><label>Peso (g)</label><input type="number" id="peso_total" value="0"></div>
+                    <div><label>Horas Impressão</label><input type="number" id="horas_imp" value="0"></div>
+                    <div><label>Horas Técnico</label><input type="number" id="horas_tec" value="0.5"></div>
+                    <div><label>Custo Mat/kg</label><input type="number" id="custo_kg" value="25"></div>
+                </div>
+            </div>
+
+            <button onclick="calcular()" class="btn-primary">CALCULAR AGORA</button>
+
+            <div id="section-resultados">
+                <div class="card">
+                    <div class="hero-price"><small>PREÇO SUGERIDO</small><div id="res-f">0,00 €</div></div>
+                    <div class="res-card"><small>Material</small><span id="r-mat">0,00 €</span></div>
+                    <div class="res-card"><small>Máquina</small><span id="r-maq">0,00 €</span></div>
+                    <div class="res-card"><small>Mão de Obra</small><span id="r-mo">0,00 €</span></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function salvarConfig() {
+            const c = { 
+                custo_kwh: document.getElementById('custo_kwh').value, 
+                potencia_w: document.getElementById('potencia_w').value, 
+                custo_operador_hora: document.getElementById('custo_operador_hora').value, 
+                depreciacao_hora: document.getElementById('depreciacao_hora').value, 
+                margem_lucro: document.getElementById('margem_lucro').value 
+            };
+            localStorage.setItem('solo_v6', JSON.stringify(c));
+            alert("✓ Definições guardadas!");
+        }
+
+        window.onload = () => {
+            const s = localStorage.getItem('solo_v6');
+            if(s) {
+                const c = JSON.parse(s);
+                Object.keys(c).forEach(k => { if(document.getElementById(k)) document.getElementById(k).value = c[k]; });
+            }
+        };
+
+        function calcular() {
+            const k = parseFloat(document.getElementById('custo_kwh').value);
+            const w = parseFloat(document.getElementById('potencia_w').value);
+            const co = parseFloat(document.getElementById('custo_operador_hora').value);
+            const d = parseFloat(document.getElementById('depreciacao_hora').value);
+            const m = parseFloat(document.getElementById('margem_lucro').value);
+            
+            const p = parseFloat(document.getElementById('peso_total').value);
+            const hi = parseFloat(document.getElementById('horas_imp').value);
+            const ht = parseFloat(document.getElementById('horas_tec').value);
+            const cm = parseFloat(document.getElementById('custo_kg').value);
+            
+            const cMat = (p/1000) * cm * 1.1;
+            const cMaq = ((w/1000 * k) + d) * hi;
+            const cMo = co * ht;
+            const final = (cMat + cMaq + cMo) * (1 + m/100);
+
+            const f = (v) => v.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' });
+            document.getElementById('r-mat').innerText = f(cMat);
+            document.getElementById('r-maq').innerText = f(cMaq);
+            document.getElementById('r-mo').innerText = f(cMo);
+            document.getElementById('res-f').innerText = f(final);
+
+            document.getElementById('section-resultados').style.display = 'block';
+            window.scrollTo({ top: document.getElementById('section-resultados').offsetTop, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
